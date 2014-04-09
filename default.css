@@ -1,0 +1,122 @@
+body, html, h1, h2, p {
+	margin: 0;
+	padding: 0;
+}
+
+body, html {
+	background-color: #fff;
+	color: #000;
+	font: 1em sans-serif;
+	line-height: 1.5;
+	width: 100%;
+}
+
+body > div {
+	margin: 0 auto;
+	padding: 3em 0;
+	width: 80%;
+}
+
+.col-left {
+	width: 40%;
+}
+
+.col-right {
+	width: 60%;
+}
+
+.row {
+	margin: 3em 0 0 0;
+}
+
+.float-right {
+	display: inline;
+	float: right;
+}
+
+.clear {
+	clear: both;
+}
+
+h1 {
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+h1, .big {
+	font-size: 1.2em;
+}
+
+h1, .float-left {
+	display: inline;
+	float: left;
+}
+
+h2 {
+	font-weight: bold;
+}
+
+h2, .small {
+	font-size: 0.85em;
+}
+
+ol {
+	color: #e0e0e0;
+	margin: 0 0 0 3em;
+	padding: 0;
+}
+
+a, [role="button"] {
+	color: #03c;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+img {
+	border: none;
+	display: block;
+}
+
+.box {
+	background-color: #f0f0f0;
+	border: 1px solid #d0d0d0;
+	color: #333;
+	margin: 0 0 0 2em;
+	padding: 1em;
+}
+
+.textbox {
+	background-color: #fff;
+	border: 1px solid;
+	margin: 0.5em 0;
+	padding: 0 0.4ex 0.2ex 0.4ex;
+}
+
+.textbox.unselected {
+	border-color: #e0e0e0;
+}
+
+.textbox.unselected:hover {
+	border-color: #d0d0d0;
+}
+
+.textbox.selected {
+	border: 1px solid #b0b0d0;
+}
+
+.textbox > input {
+	background-color: #fff;
+	border: none;
+	color: #000;
+	font-family: monospace;
+	width: 100%;
+}
+
+.textbox > input:focus {
+	outline: none;
+}
+
+.num {
+	color: #c00;
+	font-weight: bold;
+}
