@@ -103,8 +103,8 @@ $(document).ready(function () {
 			}
 		}
 	});
-	$(window).bind('hashchange', useHash);
-	useHash();
+	$(window).bind('hashchange', hashChange);
+	hashChange();
 });
 
 function refreshSequence() {
@@ -120,7 +120,7 @@ function refreshSequence() {
 		rejectSequence('');
 		return;
 	}
-	location.hash = '#' + encodeURIComponent(str);
+	setHash(str);
 	try {
 		seq.build();
 	}
@@ -175,14 +175,34 @@ function identifySequence(initial) {
 	}
 }
 
-function useHash() {
+var noHashChangeUntil = null;
+
+function getHash() {
 	var hash = location.hash;
 
 	if (hash[0] == '#') {
 		hash = hash.slice(1);
 	}
-	elDeal.val(decodeURIComponent(hash));
-	refreshSequence();
+	return decodeURIComponent(hash);
+}
+
+function setHash(hash) {
+	if (hash != getHash()) {
+		noHashChangeUntil = hash;
+		location.hash = '#' + encodeURIComponent(str);
+	}
+}
+
+function hashChange() {
+	var hash = getHash();
+
+	if (noHashChangeUntil == null) {
+		elDeal.val(hash);
+		refreshSequence();
+	}
+	else if (hash == noHashChangeUntil) {
+		noHashChangeUntil = null;
+	}
 }
 		</script>
 	</body>
