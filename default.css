@@ -72,7 +72,13 @@ a, [role="button"] {
 	text-decoration: underline;
 }
 
-img {
+a.image {
+	color: #000;
+	display: block;
+	text-decoration: none;
+}
+
+a.image > img {
 	border: none;
 	display: block;
 }
