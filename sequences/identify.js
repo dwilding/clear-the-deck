@@ -1,48 +1,73 @@
-function identifyExpression(expanded) {
+function identifyExpression(expr) {
 	var i, j, coeff,
-	expression = [],
-	str = [];
+	strs = [],
+	reducedStrs = [],
+	expanded = expandExpression(expr);
 
 	for (i = 0; i < expanded.length; i++) {
-		expression[i] = identifyFactors(expanded[i].factors);
+		strs.push(identifyFactors(expanded[i].factors));
 	}
-	for (i = 0; i < expression.length; i++) {
-		if (expression[i] != null) {
+	for (i = 0; i < strs.length; i++) {
+		if (strs[i] != null) {
 			coeff = expanded[i].coeff;
-			for (j = i + 1; j < expression.length; j++) {
-				if (expression[i] == expression[j]) {
+			for (j = i + 1; j < strs.length; j++) {
+				if (strs[i] == strs[j]) {
 					coeff += expanded[j].coeff;
-					expression[j] = null;
+					strs[j] = null;
 				}
 			}
 			if (coeff == 1) {
-				str.push(expression[i]);
+				reducedStrs.push(strs[i]);
 			}
 			else {
-				str.push(coeff.toString() + '*' + expression[i]);
+				reducedStrs.push(coeff.toString() + '*' + strs[i]);
 			}
 		}
 	}
-	str.sort();
-	return str.join('or');
+	reducedStrs.sort();
+	return reducedStrs.join('or');
 }
 
 function identifyFactors(factors) {
 	var i,
-	factor = 0,
-	str = [];
+	number = 0,
+	strs = [];
 
 	for (i = 0; i < factors.length; i++) {
 		if (typeof factors[i] == 'object') {
-			str.push('(' + identifyExpression(factors[i]) + ')^?');
+			strs.push('(' + identifyExpression(factors[i]) + ')^?');
 		}
 		else {
-			factor += factors[i];
+			number += factors[i];
 		}
 	}
-	if (factor > 0 || str.length == 0) {
-		str.push(factor.toString());
+	if (number > 0 || strs.length == 0) {
+		strs.push(number.toString());
 	}
-	str.sort();
-	return str.join('');
+	strs.sort();
+	return strs.join('');
+}
+
+function expandExpression(expr) {
+	var i, j, k, left, right,
+	expanded = [];
+
+	for (i = 0; i < expr.length; i++) {
+		if (expr[i].factors.length == 1) {
+			expanded.push(expr[i]);
+		}
+		else {
+			left = expandExpression(expr[i].factors[0]);
+			right = expandExpression(expr[i].factors[1]);
+			for (j = 0; j < left.length; j++) {
+				for (k = 0; k < right.length; k++) {
+					expanded.push({
+						coeff: expr[i].coeff * left[j].coeff * right[k].coeff,
+						factors: left[j].factors.concat(right[k].factors)
+					});
+				}
+			}
+		}
+	}
+	return expanded;
 }

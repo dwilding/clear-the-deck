@@ -1,4 +1,5 @@
-var curInput = null,
+var minTerms = 12,
+curInput = null,
 curSequence = null;
 
 function refreshSequence() {
@@ -38,23 +39,28 @@ function rejectSequence(reason) {
 }
 
 function identifySequence(initial) {
-	var identity = curSequence.identify();
+	var i, identity;
 
-	if (knownSequences.hasOwnProperty(identity)) {
-		elInfo.html(knownSequences[identity]);
+	initial = initial.slice(0, minTerms).join(',');
+	if (knownSequences.hasOwnProperty(initial)) {
+		identity = curSequence.identify();
+		for (i = 0; i < knownSequences[initial].length; i++) {
+			if (knownSequences[initial][i] == identity) {
+				elInfo.html(knownDeals[identity]);
+				return;
+			}
+		}
 	}
-	else {
-		elInfo.html('Does this sequence <a href="http://oeis.org/search?q=' +
-		encodeURIComponent('signed:' + initial.slice(2, 12).join(',')) +
-		'&fmt=short" title="Search the OEIS">look familiar</a>?');
-	}
+	elInfo.html('Does this sequence <a href="http://oeis.org/search?q=' +
+	encodeURIComponent('signed:' + initial) +
+	'&fmt=short" title="Search the OEIS">look familiar</a>?');
 }
 
 function listSequence() {
 	var i,
 	items = [];
 
-	for (i = 0; i < 12 || elBottom.is(':in-viewport'); i++) {
+	for (i = 0; i < minTerms || elBottom.is(':in-viewport'); i++) {
 		if (curSequence == null) {
 			elList.append('<li></li>');
 		}

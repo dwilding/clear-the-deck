@@ -67,7 +67,7 @@ function charMachine(number) {
 	for (i = 0; i < number; i++) {
 		machine.jump[i][i + 1] = 1;
 	}
-	machine.expanded = [{
+	machine.expr = [{
 		coeff: 1,
 		factors: [number]
 	}];
@@ -76,10 +76,10 @@ function charMachine(number) {
 
 function isCharMachine0(machine) {
 	return (
-		machine.expanded.length == 1 &&
-		machine.expanded[0].coeff == 1 &&
-		machine.expanded[0].factors.length == 1 &&
-		machine.expanded[0].factors[0] == 0
+		machine.expr.length == 1 &&
+		machine.expr[0].coeff == 1 &&
+		machine.expr[0].factors.length == 1 &&
+		machine.expr[0].factors[0] == 0
 	);
 }
 
@@ -88,7 +88,7 @@ var zeroMachine = {
 	input: [[0]],
 	output: [[0]],
 	jump: [[0]],
-	expanded: [{
+	expr: [{
 		coeff: 0,
 		factors: [0]
 	}]
@@ -96,7 +96,7 @@ var zeroMachine = {
 
 function isZeroMachine(machine) {
 	return (
-		machine.expanded.length == 1 &&
-		machine.expanded[0].coeff == 0
+		machine.expr.length == 1 &&
+		machine.expr[0].coeff == 0
 	);
 }

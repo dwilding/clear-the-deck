@@ -1,26 +1,26 @@
-function buildMachine(expression) {
+function buildMachine(expr) {
 	var i, j, k, factors, factor, term, optional,
 	machine = zeroMachine;
 
-	for (i = 0; i < expression.length; i++) {
+	for (i = 0; i < expr.length; i++) {
 		factors = charMachine(0);
-		for (j = 0; j < expression[i].factors.length; j++) {
-			if (typeof expression[i].factors[j].term == 'object') {
-				term = buildMachine(expression[i].factors[j].term);
+		for (j = 0; j < expr[i].factors.length; j++) {
+			if (typeof expr[i].factors[j].term == 'object') {
+				term = buildMachine(expr[i].factors[j].term);
 			}
 			else {
-				term = charMachine(expression[i].factors[j].term);
+				term = charMachine(expr[i].factors[j].term);
 			}
 			factor = charMachine(0);
-			for (k = 0; k < expression[i].factors[j].from; k++) {
+			for (k = 0; k < expr[i].factors[j].from; k++) {
 				factor = buildProduct(factor, term);
 			}
-			if (expression[i].factors[j].to == null) {
+			if (expr[i].factors[j].to == null) {
 				optional = buildRepeat(term);
 			}
 			else {
 				optional = charMachine(0);
-				for (; k < expression[i].factors[j].to; k++) {
+				for (; k < expr[i].factors[j].to; k++) {
 					optional = buildSum(
 						buildProduct(optional, term),
 						charMachine(0)
@@ -34,7 +34,7 @@ function buildMachine(expression) {
 		}
 		machine = buildSum(
 			machine,
-			buildScale(expression[i].coeff, factors)
+			buildScale(expr[i].coeff, factors)
 		);
 	}
 	return machine;
@@ -51,13 +51,13 @@ function buildSum(left, right) {
 	}
 	else {
 		machine = machineSum(left, right);
-		machine.expanded = left.expanded.concat(right.expanded);
+		machine.expr = left.expr.concat(right.expr);
 	}
 	return machine;
 }
 
 function buildProduct(left, right) {
-	var i, j, machine;
+	var machine;
 
 	if (isZeroMachine(left) || isZeroMachine(right)) {
 		machine = zeroMachine;
@@ -70,17 +70,10 @@ function buildProduct(left, right) {
 	}
 	else {
 		machine = machineProduct(left, right);
-		machine.expanded = [];
-		for (i = 0; i < left.expanded.length; i++) {
-			for (j = 0; j < right.expanded.length; j++) {
-				machine.expanded.push({
-					coeff: left.expanded[i].coeff * right.expanded[j].coeff,
-					factors: left.expanded[i].factors.concat(
-						right.expanded[j].factors
-					)
-				});
-			}
-		}
+		machine.expr = [{
+			coeff: 1,
+			factors: [left.expr, right.expr]
+		}];
 	}
 	return machine;
 }
@@ -93,9 +86,9 @@ function buildRepeat(left) {
 	}
 	else {
 		machine = machineRepeat(left);
-		machine.expanded = [{
+		machine.expr = [{
 			coeff: 1,
-			factors: [left.expanded]
+			factors: [left.expr]
 		}];
 	}
 	return machine;
@@ -111,8 +104,8 @@ function buildScale(number, right) {
 		machine = right;
 		if (number > 1) {
 			machine.output = matrixProduct(machine.output, [[number]]);
-			for (i = 0; i < machine.expanded.length; i++) {
-				machine.expanded[i].coeff *= number;
+			for (i = 0; i < machine.expr.length; i++) {
+				machine.expr[i].coeff *= number;
 			}
 		}
 	}

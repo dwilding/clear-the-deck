@@ -1,15 +1,15 @@
-function parseExpression(raw, subExpression) {
+function parseExpression(raw, isSubExpression) {
 	var i, j,
-	expression = [{}];
+	expr = [{}];
 
 	if (raw.str.length == 0) {
 		throw raw;
 	}
-	for (j = 0; j < expression.length; j++) {
+	for (j = 0; j < expr.length; j++) {
 		skipSpace(raw);
 		try {
 			i = raw.i;
-			expression[j].coeff = parseNumber(raw);
+			expr[j].coeff = parseNumber(raw);
 			skipSpace(raw);
 			if (raw.str[raw.i] != '*') {
 				throw raw;
@@ -19,30 +19,30 @@ function parseExpression(raw, subExpression) {
 		}
 		catch (e) {
 			raw.i = i;
-			expression[j].coeff = 1;
+			expr[j].coeff = 1;
 		}
-		expression[j].factors = [parseFactor(raw)];
+		expr[j].factors = [parseFactor(raw)];
 		skipSpace(raw);
 		while (raw.i < raw.str.length) {
-			if (subExpression && raw.str[raw.i] == ')') {
+			if (isSubExpression && raw.str[raw.i] == ')') {
 				raw.i++;
-				return expression;
+				return expr;
 			}
 			else if (raw.str.slice(raw.i, raw.i + 2).toLowerCase() == 'or') {
 				raw.i += 2;
-				expression.push({});
+				expr.push({});
 				break;
 			}
 			else {
-				expression[j].factors.push(parseFactor(raw));
+				expr[j].factors.push(parseFactor(raw));
 				skipSpace(raw);
 			}
 		}
 	}
-	if (subExpression) {
+	if (isSubExpression) {
 		throw raw;
 	}
-	return expression;
+	return expr;
 }
 
 function parseFactor(raw) {

@@ -13,6 +13,9 @@ examples = [
 	'...'
 ],
 knownSequences = {
+	'1,1,1,1,1,1,1,1,1,1,1,1': ['(1)^?']
+},
+knownDeals = {
 	'(1)^?': 'You have found <a href="http://oeis.org/A000012">A000012</a>!'
 };
 

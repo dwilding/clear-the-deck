@@ -1,5 +1,5 @@
 function Sequence(str) {
-	this.expression = parseExpression(
+	this.expr = parseExpression(
 		{
 			str: str,
 			i: 0
@@ -9,7 +9,7 @@ function Sequence(str) {
 }
 
 Sequence.prototype.build = function () {
-	this.machine = buildMachine(this.expression);
+	this.machine = buildMachine(this.expr);
 	this.reset();
 }
 
@@ -25,5 +25,5 @@ Sequence.prototype.next = function () {
 }
 
 Sequence.prototype.identify = function () {
-	return identifyExpression(this.machine.expanded);
+	return identifyExpression(this.machine.expr);
 }
