@@ -1,9 +1,8 @@
-var elDeal, elDealBorder, elExample, elStatus, elInfo, elList, elBottom;
+var elDeal, elDealBorder, elStatus, elInfo, elList, elBottom;
 
 $(document).ready(function () {
 	elDeal = $('#deal');
 	elDealBorder = $('#deal-border');
-	elExample = $('#example');
 	elStatus = $('#status');
 	elInfo = $('#info');
 	elList = $('#list');
@@ -16,7 +15,6 @@ $(document).ready(function () {
 	});
 	elDeal.keyup(refreshSequence);
 	elDeal.change(refreshSequence);
-	elExample.click(nextExample);
 	$(window).scroll(function () {
 		if (elBottom.is(':in-viewport')) {
 			listSequence();

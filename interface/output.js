@@ -1,4 +1,5 @@
-var minTerms = 12,
+var defaultTitle = 'Clear the deck',
+minTerms = 12,
 curInput = null,
 curSequence = null;
 
@@ -11,7 +12,7 @@ function refreshSequence() {
 		curSequence = new Sequence(curInput);
 	}
 	catch (e) {
-		elStatus.text('A' + (e.i + 1).toString());
+		elStatus.text((e.i + 1).toString() + 'A');
 		rejectSequence('');
 		return;
 	}
@@ -20,40 +21,41 @@ function refreshSequence() {
 		curSequence.build();
 	}
 	catch (e) {
-		elStatus.html('B' + e.toString());
-		rejectSequence('Your deal <a href="#0%5E0-1">does</a> ' +
-		'<a href="#0%5E0-2">not</a> <a href="#0%5E0-3">make</a> ' +
-		'<a href="#0%5E0-4">sense</a>!');
+		elStatus.html(e.toString() + 'B');
+		rejectSequence('Your deal <a href="#0%5E0-1">does</a> \
+		<a href="#0%5E0-2">not</a> <a href="#0%5E0-3">make</a> \
+		<a href="#0%5E0-4">sense</a>!');
 		return;
 	}
-	elStatus.html('C' + curSequence.machine.states.toString());
+	elStatus.html(curSequence.machine.states.toString() + 'C');
 	elList.html('');
 	identifySequence(listSequence());
 }
 
-function rejectSequence(reason) {
+function rejectSequence(info) {
 	curSequence = null;
 	elList.html('');
 	listSequence();
-	elInfo.html(reason);
+	document.title = defaultTitle;
+	elInfo.html(info);
 }
 
 function identifySequence(initial) {
-	var i, identity;
+	var i, identity, info;
 
 	initial = initial.slice(0, minTerms).join(',');
-	if (knownSequences.hasOwnProperty(initial)) {
+	if (knownDeals.hasOwnProperty(initial)) {
 		identity = curSequence.identify();
-		for (i = 0; i < knownSequences[initial].length; i++) {
-			if (knownSequences[initial][i] == identity) {
-				elInfo.html(knownDeals[identity]);
-				return;
-			}
-		}
+		info = knownDeals[initial](identity);
 	}
-	elInfo.html('Does this sequence <a href="http://oeis.org/search?q=' +
-	encodeURIComponent('signed:' + initial) +
-	'&fmt=short" title="Search the OEIS">look familiar</a>?');
+	if (typeof info != 'string') {
+		document.title = defaultTitle;
+		info = 'Does this sequence <a href="http://oeis.org/search?q=' +
+		encodeURIComponent('signed:' + initial) +
+		'&fmt=short" title="Search the OEIS">look familiar</a>? \
+		Email <a href="mailto:hi@dpw.me">hi@dpw.me</a> if you know what it is.';
+	}
+	elInfo.html(info);
 }
 
 function listSequence() {
