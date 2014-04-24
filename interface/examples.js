@@ -14,7 +14,7 @@ var knownDeals = {
 	},
 	'0,1,1,2,3,5,8,13,21,34,55,89': function (identity) {
 		if (identity == '(1or2)^?1') {
-			document.title = defaultTitle + ' - A000045';
+			document.title = 'A000045 - ' + defaultTitle;
 			return 'Congratulations! You have found sequence \
 			<a href="http://oeis.org/A000045">A000045</a>.';
 		}
