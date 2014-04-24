@@ -36,7 +36,7 @@ at one of __m__ &ge; 0 people is to put an asterisk between __m__ and the chain:
 # How it works
 1. Your deal is first parsed to make sure that it is syntactically valid. If it
 isn't valid, the status displayed will be <b>i</b>A for some __i__ &ge; 1,
-meaning that the __i__th symbol in your deal is incorrect (or missing). For
+meaning that the <b>i</b>th symbol in your deal is incorrect (or missing). For
 example, `1^?^2` isn't a valid deal because `1^?` isn't enclosed in round
 brackets.
 
