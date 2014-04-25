@@ -1,3 +1,9 @@
+/*
+We want to be able to recognise certain sequences (to provide useful information
+about them), but it can be very expensive to call Sequence.identify(). By
+storing the first defaultLength terms of each sequence we need only call
+Sequence.identify() when absolutely necessary.
+*/
 var knownDeals = {
 	'1,1,2,3,5,8,13,21,34,55,89,144': function (identity) {
 		if (identity == '(1or2)^?') {
@@ -58,6 +64,10 @@ var knownDeals = {
 	}
 };
 
+/*
+The OEIS (http://oeis.org/) knows about loads of integer sequences, so return a
+congratulatory message whenever one we know about is found.
+*/
 function knownSequence(oeis) {
 	document.title = oeis + ' - ' + defaultTitle;
 	return 'Congratulations! You have found sequence\

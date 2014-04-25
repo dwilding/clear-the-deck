@@ -14,6 +14,11 @@ function matrixProduct(left, right) {
 	return matrix;
 }
 
+/*
+A matrix is implemented as an array of row vectors, so vertical concatenation
+of matrices can be done with Array.concat(). matrixConcat() implements horizonal
+concatenation of matrices.
+*/
 function matrixConcat(left, right) {
 	var i,
 	matrix = [];

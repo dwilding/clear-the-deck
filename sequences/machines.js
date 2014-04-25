@@ -1,3 +1,6 @@
+/*
+Implements the sum of two finite-state machines.
+*/
 function machineSum(left, right) {
 	var machine = {};
 
@@ -11,6 +14,9 @@ function machineSum(left, right) {
 	return machine;
 }
 
+/*
+Implements the product of two finite-state machines.
+*/
 function machineProduct(left, right) {
 	var machine = {};
 
@@ -33,11 +39,15 @@ function machineProduct(left, right) {
 	return machine;
 }
 
+/*
+Implements the Kleene * of a finite-state machine.
+*/
 function machineRepeat(left) {
 	var jumpOutput,
 	inputOutput = matrixProduct(left.input, left.output);
 	machine = {};
 
+	// the machine's sequence must begin with 0 for the Kleene * to make sense
 	if (inputOutput != 0) {
 		throw {
 			type: 'repeatError',
@@ -57,6 +67,10 @@ function machineRepeat(left) {
 	return machine;
 }
 
+/*
+Implements the characteristic machine whose sequence is zero except for 1 at the
+given term.
+*/
 function charMachine(number) {
 	var i,
 	machine = {};
@@ -77,6 +91,9 @@ function charMachine(number) {
 	return machine;
 }
 
+/*
+Test whether a machine is the characteristic machine of 0.
+*/
 function isCharMachine0(machine) {
 	return (
 		machine.expr.length == 1 &&
@@ -86,6 +103,9 @@ function isCharMachine0(machine) {
 	);
 }
 
+/*
+The zero machine's sequence is zero everywhere.
+*/
 var zeroMachine = {
 	states: 1,
 	input: [[0]],
@@ -97,6 +117,9 @@ var zeroMachine = {
 	}]
 }
 
+/*
+Test whether a machine is the zero machine.
+*/
 function isZeroMachine(machine) {
 	return (
 		machine.expr.length == 1 &&
@@ -104,6 +127,12 @@ function isZeroMachine(machine) {
 	);
 }
 
+/*
+Through (limited) testing I've determined that machines with more than 200
+states aren't really practical in the current implementation, so to prevent
+browser crashes we'll throw an error if a machine is about to get too big.
+This is not perfect (try 0*200 vs 0*199), but it's good enough for now.
+*/
 function checkSize(states) {
 	if (states > 200) {
 		throw {
