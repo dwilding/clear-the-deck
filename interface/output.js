@@ -1,5 +1,5 @@
 var defaultTitle = 'Clear the deck',
-minTerms = 12,
+defaultLength = 12,
 curInput = null,
 curSequence = null;
 
@@ -8,12 +8,16 @@ function refreshSequence() {
 		return;
 	}
 	curInput = elDeal.val();
+	document.title = defaultTitle;
+	elList.html('');
+	elInfo.html('');
 	try {
 		curSequence = new Sequence(curInput);
 	}
 	catch (e) {
 		elStatus.text((e.i + 1).toString() + 'A');
-		rejectSequence('');
+		curSequence = null;
+		listSequence();
 		return;
 	}
 	setHash(curInput);
@@ -22,47 +26,19 @@ function refreshSequence() {
 	}
 	catch (e) {
 		elStatus.html(e.toString() + 'B');
-		rejectSequence('Your deal <a href="#0%5E0-1">does</a> \
-		<a href="#0%5E0-2">not</a> <a href="#0%5E0-3">make</a> \
-		<a href="#0%5E0-4">sense</a>!');
+		curSequence = null;
+		listSequence();
 		return;
 	}
 	elStatus.html(curSequence.machine.states.toString() + 'C');
-	elList.html('');
 	identifySequence(listSequence());
-}
-
-function rejectSequence(info) {
-	curSequence = null;
-	elList.html('');
-	listSequence();
-	document.title = defaultTitle;
-	elInfo.html(info);
-}
-
-function identifySequence(initial) {
-	var i, identity, info;
-
-	initial = initial.slice(0, minTerms).join(',');
-	if (knownDeals.hasOwnProperty(initial)) {
-		identity = curSequence.identify();
-		info = knownDeals[initial](identity);
-	}
-	if (typeof info != 'string') {
-		document.title = defaultTitle;
-		info = 'Does this sequence <a href="http://oeis.org/search?q=' +
-		encodeURIComponent('signed:' + initial) +
-		'&fmt=short" title="Search the OEIS">look familiar</a>? \
-		Email <a href="mailto:hi@dpw.me">hi@dpw.me</a> if you know what it is.';
-	}
-	elInfo.html(info);
 }
 
 function listSequence() {
 	var i,
 	items = [];
 
-	for (i = 0; i < minTerms || elBottom.is(':in-viewport'); i++) {
+	for (i = 0; i < defaultLength || elBottom.is(':in-viewport'); i++) {
 		if (curSequence == null) {
 			elList.append('<li></li>');
 		}
@@ -72,4 +48,21 @@ function listSequence() {
 		}
 	}
 	return items;
+}
+
+function identifySequence(items) {
+	var initial, identity, info;
+
+	initial = items.slice(0, defaultLength).join(',');
+	if (knownDeals.hasOwnProperty(initial)) {
+		identity = curSequence.identify();
+		info = knownDeals[initial](identity);
+	}
+	if (typeof info != 'string') {
+		info = 'Does this sequence <a href="http://oeis.org/search?q=' +
+		encodeURIComponent('signed:' + initial) +
+		'&fmt=short" title="Search the OEIS">look familiar</a>? Email\
+		<a href="mailto:hi@dpw.me">hi@dpw.me</a> if you know what it is.';
+	}
+	elInfo.html(info);
 }

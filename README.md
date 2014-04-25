@@ -25,8 +25,8 @@ one of the deals in your chain is more complicated than the deals described
 above, you will need to enclose it in round brackets.
 
 Finally, the keyword 'or' turns chains of deals into different possibilities
-within the same deal. For example, `1... or 2` means "deal 1 card, then deal as
-many cards as you like; or just deal 2 cards". Perhaps surprisingly, `5 or 5`
+within the same deal. For example, `1... or 2` means "deal 1 card then deal as
+many cards as you like, or just deal 2 cards". Perhaps surprisingly, `5 or 5`
 doesn't simply mean "deal 5 cards". Rather, it means "deal 5 cards to a person
 or deal 5 cards to a different person", or in other words, "deal 5 cards to one
 of 2 people". A simpler way to specify that a chain of deals should be directed
