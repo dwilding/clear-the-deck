@@ -25,7 +25,12 @@ function refreshSequence() {
 		curSequence.build();
 	}
 	catch (e) {
-		elStatus.html(e.toString() + 'B');
+		if (e.type == 'repeatError') {
+			elStatus.html(e.number.toString() + 'B');
+		}
+		else if (e.type == 'sizeError') {
+			elStatus.html(e.number.toString() + 'D');
+		}
 		curSequence = null;
 		listSequence();
 		return;

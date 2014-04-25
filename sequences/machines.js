@@ -1,7 +1,7 @@
 function machineSum(left, right) {
 	var machine = {};
 
-	machine.states = left.states + right.states;
+	machine.states = checkSize(left.states + right.states);
 	machine.input = matrixConcat(left.input, right.input);
 	machine.output = left.output.concat(right.output);
 	machine.jump = matrixConcat(
@@ -14,7 +14,7 @@ function machineSum(left, right) {
 function machineProduct(left, right) {
 	var machine = {};
 
-	machine.states = left.states + right.states;
+	machine.states = checkSize(left.states + right.states);
 	machine.input = matrixConcat(
 		left.input,
 		zeroMatrix(1, right.states)
@@ -39,9 +39,12 @@ function machineRepeat(left) {
 	machine = {};
 
 	if (inputOutput != 0) {
-		throw inputOutput;
+		throw {
+			type: 'repeatError',
+			number: inputOutput
+		}
 	}
-	machine.states = left.states + 1;
+	machine.states = checkSize(left.states + 1);
 	machine.input = zeroMatrix(1, machine.states);
 	machine.input[0][0] = 1;
 	machine.output = zeroMatrix(machine.states, 1);
@@ -58,7 +61,7 @@ function charMachine(number) {
 	var i,
 	machine = {};
 
-	machine.states = number + 1;
+	machine.states = checkSize(number + 1);
 	machine.input = zeroMatrix(1, machine.states);
 	machine.input[0][0] = 1;
 	machine.output = zeroMatrix(machine.states, 1);
@@ -99,4 +102,14 @@ function isZeroMachine(machine) {
 		machine.expr.length == 1 &&
 		machine.expr[0].coeff == 0
 	);
+}
+
+function checkSize(states) {
+	if (states > 200) {
+		throw {
+			type: 'sizeError',
+			number: states
+		}
+	}
+	return states;
 }
