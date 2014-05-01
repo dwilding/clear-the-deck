@@ -22,7 +22,7 @@ Sequence.prototype.reset = function () {
 
 // generate a single sequence term
 Sequence.prototype.next = function () {
-	var number = matrixProduct(this.current, this.machine.output);
+	var number = matrixProduct(this.current, this.machine.output)[0][0];
 
 	this.current = matrixProduct(this.current, this.machine.jump);
 	return number;

@@ -44,7 +44,7 @@ Implements the Kleene * of a finite-state machine.
 */
 function machineRepeat(left) {
 	var jumpOutput,
-	inputOutput = matrixProduct(left.input, left.output);
+	inputOutput = matrixProduct(left.input, left.output)[0][0];
 	machine = {};
 
 	// the machine's sequence must begin with 0 for the Kleene * to make sense

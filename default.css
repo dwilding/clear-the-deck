@@ -122,8 +122,11 @@ a.image > img {
 	outline: none;
 }
 
-.num {
+.item {
 	color: #c00;
+}
+
+.num {
 	font-weight: bold;
 }
 

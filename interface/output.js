@@ -1,5 +1,6 @@
 var defaultTitle = 'Clear the deck',
 defaultLength = 12, // the minimum number of sequence terms we'll generate
+maxNumber = Math.pow(2, 53) - 1, // largest accurate number
 curInput = null,
 curSequence = null;
 
@@ -50,7 +51,7 @@ function refreshSequence() {
 }
 
 function listSequence() {
-	var i,
+	var i, item,
 	items = [];
 
 	// generate at least enough sequence terms to fill the page
@@ -61,8 +62,18 @@ function listSequence() {
 		}
 		// if curSequence is a genuine sequence
 		else {
-			items.push(curSequence.next().toString());
-			elList.append('<li><span class="num">' + items[i] + '</span></li>');
+			item = curSequence.next();
+			// if item is too large to be accurate
+			if (item > maxNumber) {
+				items.push(null); // don't know what else to do
+				elList.append('<li><span class="item">&ge; ' +
+				(maxNumber + 1).toString() + '<span></li>');
+			}
+			else {
+				items.push(item.toString());
+				elList.append('<li><span class="item num">' +
+				items[i] + '</span></li>');
+			}
 		}
 	}
 	return items;
