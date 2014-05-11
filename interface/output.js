@@ -80,23 +80,79 @@ function listSequence() {
 }
 
 function identifySequence(items) {
-	var initial, identity, info;
+	var i, initial, identity, query, offset, link, input;
 
 	// get rid of unecessary sequence terms
-	initial = items.slice(0, defaultLength).join(',');
+	items = items.slice(0, defaultLength);
+	initial = items.join(',');
 	// if the sequence looks like it might have come from a known deal
 	if (knownDeals.hasOwnProperty(initial)) {
+		// identify the sequence and display information about it
 		identity = curSequence.identify();
-		// fetch sequence info (if its identity matches a known deal)
-		info = knownDeals[initial](identity);
+		if (knownDeals[initial].hasOwnProperty(identity)) {
+			elInfo.html(getDeal(initial, identity));
+			return;
+		}
 	}
-	// if there's no sequence info available
-	if (typeof info != 'string') {
-		// provide a link to the OEIS instead
-		info = 'Does this sequence <a href="http://oeis.org/search?q=' +
-		encodeURIComponent('signed:' + initial) +
-		'&fmt=short" title="Search the OEIS">look familiar</a>? Email\
-		<a href="mailto:hi@dpw.me">hi@dpw.me</a> if you know what it is.';
+	// get rid of the first couple of zero terms before searching the OEIS
+	for (i = 0; i < 2 && items[i] == 0; i++) {}
+	query = encodeURIComponent(items.slice(i).join(','));
+	offset = i.toString();
+	// display a searching message
+	link = '<a href="' + 'http://oeis.org/search?q=signed%3A' +
+	query + '&fmt=short" title="Search for this sequence">the OEIS</a>';
+	elInfo.html('Searching ' + link + '&hellip;');
+	// store current input (so we can check if the search results are relevant)
+	input = curInput;
+	// initiate the search
+	$.getJSON(
+		'oeis.php?q=' + query + '&o=' + offset,
+		// this function will receive the search results
+		function(results) {
+			var i, sequence;
+
+			// if the search results are still relevant
+			if (curInput == input) {
+				// for each result
+				for (i = 0; i < results.length; i++) {
+					// turn the result's deal into a sequence
+					try {
+						sequence = new Sequence(results[i].deal);
+						sequence.build();
+					}
+					catch (e) {
+						continue;
+					}
+					// if the result's sequence looks like it matches ours
+					if (checkSequence(sequence, items)) {
+						// identify our sequence if necessary
+						if (typeof identity != 'string') {
+							identity = curSequence.identify();
+						}
+						// if the sequence identities match then we're done
+						if (sequence.identify() == identity) {
+							addDeal(initial, identity, results[i].oeis);
+							elInfo.html(getDeal(initial, identity));
+							return;
+						}
+					}
+				}
+				// none of the search results have our sequence's identity
+				elInfo.html('This sequence may or may not exist in ' +
+				link + '.');
+			}
+		}
+	);
+}
+
+function checkSequence(sequence, items) {
+	var i;
+
+	// check that the first defaultLength terms in the sequence match the items
+	for (i = 0; i < defaultLength; i++) {
+		if (sequence.next() != items[i]) {
+			return false;
+		}
 	}
-	elInfo.html(info);
+	return true;
 }
