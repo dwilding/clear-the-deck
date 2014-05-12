@@ -41,120 +41,121 @@ var knownDeals = {
 			another example</a>'
 		}
 	}
-};
+},
+unknownDeals = {};
 
-addDeal(
+addKnown(
 	'0,0,0,0,0,0,0,0,0,0,0,0',
 	'0*0',
 	'A000004'
 );
-addDeal(
+addKnown(
 	'1,0,0,0,0,0,0,0,0,0,0,0',
 	'0',
 	'A000007'
 );
-addDeal(
+addKnown(
 	'0,1,0,0,0,0,0,0,0,0,0,0',
 	'1',
 	'A063524'
 );
-addDeal(
+addKnown(
 	'0,0,1,0,0,0,0,0,0,0,0,0',
 	'2',
 	'A185012'
 );
-addDeal(
+addKnown(
 	'0,0,0,1,0,0,0,0,0,0,0,0',
 	'3',
 	'A185013'
 );
-addDeal(
+addKnown(
 	'0,0,0,0,1,0,0,0,0,0,0,0',
 	'4',
 	'A185014'
 );
-addDeal(
+addKnown(
 	'0,0,0,0,0,1,0,0,0,0,0,0',
 	'5',
 	'A185015'
 );
-addDeal(
+addKnown(
 	'0,0,0,0,0,0,1,0,0,0,0,0',
 	'6',
 	'A185016'
 );
-addDeal(
+addKnown(
 	'0,0,0,0,0,0,0,1,0,0,0,0',
 	'7',
 	'A185017'
 );
-addDeal(
+addKnown(
 	'1,1,1,1,1,1,1,1,1,1,1,1',
 	'(1)^?',
 	'A000012'
 );
 // natural numbers
-addDeal(
+addKnown(
 	'1,2,3,4,5,6,7,8,9,10,11,12',
 	'(1)^?(1)^?',
 	'A000027'
 );
-addDeal(
+addKnown(
 	'1,2,3,4,5,6,7,8,9,10,11,12',
 	'(1)^?or(1)^?(1)^?1',
 	'A000027'
 );
-addDeal(
+addKnown(
 	'0,1,2,3,4,5,6,7,8,9,10,11',
 	'(1)^?(1)^?1',
 	'A001477'
 );
-addDeal(
+addKnown(
 	'0,1,2,3,4,5,6,7,8,9,10,11',
 	'(1)^?(1)^?2or(1)^?1',
 	'A001477'
 );
 // even numbers
-addDeal(
+addKnown(
 	'0,2,4,6,8,10,12,14,16,18,20,22',
 	'2*(1)^?(1)^?1',
 	'A005843'
 );
 // odd numbers
-addDeal(
+addKnown(
 	'1,3,5,7,9,11,13,15,17,19,21,23',
 	'(1)^?or2*(1)^?(1)^?1',
 	'A005408'
 );
-addDeal(
+addKnown(
 	'1,3,5,7,9,11,13,15,17,19,21,23',
 	'(1)^?(1)^?or(1)^?(1)^?1',
 	'A005408'
 );
 // square numbers
-addDeal(
+addKnown(
 	'0,1,4,9,16,25,36,49,64,81,100,121',
 	'(1)^?(1)^?1or2*(1)^?(1)^?(1)^?2',
 	'A000290'
 );
-addDeal(
+addKnown(
 	'0,1,4,9,16,25,36,49,64,81,100,121',
 	'(1)^?(1)^?(1)^?1or(1)^?(1)^?(1)^?2',
 	'A000290'
 );
 // powers of 2
-addDeal(
+addKnown(
 	'1,2,4,8,16,32,64,128,256,512,1024,2048',
 	'(2*1)^?',
 	'A000079'
 );
-addDeal(
+addKnown(
 	'1,2,4,8,16,32,64,128,256,512,1024,2048',
 	'((1)^?1)^?(1)^?',
 	'A000079'
 );
 
-function addDeal(initial, identity, oeis) {
+function addKnown(initial, identity, oeis) {
 	var data = {
 		oeis: oeis,
 		text: null
@@ -167,7 +168,7 @@ function addDeal(initial, identity, oeis) {
 	knownDeals[initial][identity] = data;
 }
 
-function getDeal(initial, identity) {
+function getKnown(initial, identity) {
 	if (knownDeals[initial][identity].oeis != null) {
 		document.title = knownDeals[initial][identity].oeis +
 		' - ' + defaultTitle;
@@ -183,4 +184,8 @@ function getDeal(initial, identity) {
 	else {
 		return '';
 	}
+}
+
+function getUnknown(input) {
+	return 'This sequence may or may not exist in ' + unknownDeals[input] + '.';
 }

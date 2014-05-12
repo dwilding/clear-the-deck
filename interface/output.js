@@ -80,9 +80,15 @@ function listSequence() {
 }
 
 function identifySequence(items) {
-	var i, initial, identity, query, offset, link, input;
+	var i, initial, identity, query, offset, link,
+	input = curInput;
 
-	// get rid of unecessary sequence terms
+	// if the deal is unknown
+	if (unknownDeals.hasOwnProperty(input)) {
+		elInfo.html(getUnknown(input));
+		return;
+	}
+	// get rid of extra sequence terms
 	items = items.slice(0, defaultLength);
 	initial = items.join(',');
 	// if the sequence looks like it might have come from a known deal
@@ -90,20 +96,18 @@ function identifySequence(items) {
 		// identify the sequence and display information about it
 		identity = curSequence.identify();
 		if (knownDeals[initial].hasOwnProperty(identity)) {
-			elInfo.html(getDeal(initial, identity));
+			elInfo.html(getKnown(initial, identity));
 			return;
 		}
 	}
-	// get rid of the first couple of zero terms before searching the OEIS
-	for (i = 0; i < 2 && items[i] == 0; i++) {}
+	// get rid of the first few zero terms before searching the OEIS
+	for (i = 0; i < 4 && items[i] == 0; i++) {}
 	query = encodeURIComponent(items.slice(i).join(','));
 	offset = i.toString();
 	// display a searching message
 	link = '<a href="' + 'http://oeis.org/search?q=signed%3A' +
 	query + '&fmt=short" title="Search for this sequence">the OEIS</a>';
 	elInfo.html('Searching ' + link + '&hellip;');
-	// store current input (so we can check if the search results are relevant)
-	input = curInput;
 	// initiate the search
 	$.getJSON(
 		'oeis.php?q=' + query + '&o=' + offset,
@@ -131,15 +135,15 @@ function identifySequence(items) {
 						}
 						// if the sequence identities match then we're done
 						if (sequence.identify() == identity) {
-							addDeal(initial, identity, results[i].oeis);
-							elInfo.html(getDeal(initial, identity));
+							addKnown(initial, identity, results[i].oeis);
+							elInfo.html(getKnown(initial, identity));
 							return;
 						}
 					}
 				}
 				// none of the search results have our sequence's identity
-				elInfo.html('This sequence may or may not exist in ' +
-				link + '.');
+				unknownDeals[input] = link;
+				elInfo.html(getUnknown(input));
 			}
 		}
 	);
