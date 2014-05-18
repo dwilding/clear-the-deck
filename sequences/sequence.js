@@ -12,6 +12,7 @@ function Sequence(str) {
 // turn a parsed deal into a machine
 Sequence.prototype.build = function () {
 	this.machine = buildMachine(this.expr);
+	this.machine.identity = null;
 	this.reset();
 }
 
@@ -30,5 +31,8 @@ Sequence.prototype.next = function () {
 
 // turn a machine into a deal
 Sequence.prototype.identify = function () {
-	return identifyExpression(this.machine.expr);
+	if (this.machine.identity == null) {
+		this.machine.identity = identifyExpression(this.machine.expr);
+	}
+	return this.machine.identity;
 }

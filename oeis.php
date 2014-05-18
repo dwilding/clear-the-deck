@@ -4,9 +4,26 @@
 	formatted list of candidate sequences from the OEIS (http://oeis.org/).
 	*/
 	header('Content-Type: application/json');
+	$query = urldecode($_GET['q']);
 
-	// query the OEIS
-	$url = 'http://oeis.org/search?q=signed%3A' . $_GET['q'] . '&fmt=text';
+	// remove leading '0's for the OEIS search
+	$oeis_query = explode(', ', $query);
+	for ($i = 0; $i < 4 && $oeis_query[$i] == '0'; $i++) {}
+	$oeis_query = array_slice($oeis_query, $i);
+	$q = urlencode(implode(', ', $oeis_query));
+
+	// first try searching the list of known sequences
+	$known = json_decode(file_get_contents('oeis.json'), true);
+	if (array_key_exists($query, $known)) {
+		$results = $known[$query];
+		foreach ($results as $key => $result) {
+			$results[$key]['info'] = info($result['title']);
+		}
+		output($results, $q);
+	}
+
+	// search the OEIS
+	$url = 'http://oeis.org/search?q=signed%3A' . $q . '&fmt=text';
 	$handle = curl_init($url);
 	curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
 	$reply = curl_exec($handle);
@@ -15,31 +32,32 @@
 	$results = array();
 	preg_match_all('#%I (A\d+)#', $reply, $results, PREG_SET_ORDER);
 	foreach ($results as $key => $result) {
-		$name = $result[1];
+		$title = $result[1];
 
 		// find the first few terms of the sequence
-		$regex = '#%S ' . $name . ' ([,\d]+)#';
+		$regex = '#%S ' . $title . ' ([,\d]+)#';
 		$sequence = array();
 		preg_match($regex, $reply, $sequence);
+		$sequence = explode(',', $sequence[1]);
 
-		// pad the sequence with '0's if it has an offset
-		$regex = '#%O ' . $name . ' (\d+),#';
+		// find the sequence's offset
+		$regex = '#%O ' . $title . ' (\d+),#';
 		$offset = array();
 		preg_match($regex, $reply, $offset);
-		$sequence = str_repeat('0,', intval($offset[1])) . $sequence[1];
+		$offset = intval($offset[1]);
 
-		// pad the query with '0's if an offset is given
-		$query = str_repeat('0,', intval($_GET['o'])) . urldecode($_GET['q']);
+		// remove leading '0's and unecessary trailing terms from the sequence
+		for ($i = 0; $i < 4 - $offset && $sequence[$i] == '0'; $i++) {}
+		$sequence = array_slice($sequence, $i, count($oeis_query));
 
 		// the query should match the start of the sequence
-		$length = min(strlen($query), strlen($sequence));
-		if (substr($query, 0, $length) != substr($sequence, 0, $length)) {
+		if ($oeis_query != $sequence) {
 			unset($results[$key]);
 			continue;
 		}
 
 		// find a rational generating function for the sequence
-		$regex = '#' . $name . ' G\.f\.: ([+*()x\^\d\s]+)/([-+*()x\^\d\s]+)#';
+		$regex = '#' . $title . ' G\.f\.: ([+*()x\^\d\s]+)/([-+*()x\^\d\s]+)#';
 		$formula = array();
 		preg_match($regex, $reply, $formula);
 		if (empty($formula)) {
@@ -50,14 +68,25 @@
 		// rewrite the generating function in the form of a deal
 		$numerator = convert_expression($formula[1]);
 		$denominator = convert_expression(convert_denominator($formula[2]));
+
+		// prepare the result
 		$results[$key] = array(
+			'identity' => NULL,
 			'deal' => $numerator . ' ' . $denominator,
-			'oeis' => $name
+			'title' => $title,
+			'info' => info($title),
+			'offset' => $offset
 		);
+		if ($offset > 0) {
+			$results[$key]['info_offset'] = info_offset($title, $offset);
+		}
 	}
 
-	// ouput the list of candidate sequences
-	echo json_encode(array_values($results));
+	// sort the results by offset and output thenm
+	usort($results, function ($result1, $result2) {
+		return $result1['offset'] - $result2['offset'];
+	});
+	output($results, $q);
 
 	/*
 	Convert a polynomial-based expression to a deal.
@@ -88,5 +117,27 @@
 		$expr = preg_replace('#((\()|[-+])\s*1\s*([-+)])#', '$2$3', $expr);
 		$expr = str_replace('-', '+', $expr);
 		return preg_replace('#\(\s*\+?([+*x\^\d\s]+)\)#', '(($1)^?)', $expr);
+	}
+
+	function info($title) {
+		$link = '<a href="http://oeis.org/' . $title . '">' . $title . '</a>';
+		return 'Congratulations! You have found sequence ' . $link . '.';
+	}
+
+	function info_offset($title, $offset) {
+		$link = '<a href="http://oeis.org/' . $title . '">' . $title . '</a>';
+		return 'This sequence looks like ' . $link .
+		', but ' . $link . ' is offset by ' . $offset . '.';
+	}
+
+	function output($results, $q) {
+		array_push($results, array(
+			'identity' => NULL,
+			'deal' => NULL,
+			'info' => 'This sequence may or may not exist in ' .
+			'<a href="http://oeis.org/search?q=signed%3A' . $q .
+			'&fmt=short" title="Search for this sequence">the OEIS</a>.',
+		));
+		exit(json_encode($results));
 	}
 ?>

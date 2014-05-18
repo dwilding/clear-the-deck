@@ -80,83 +80,87 @@ function listSequence() {
 }
 
 function identifySequence(items) {
-	var i, initial, identity, query, offset, link,
-	input = curInput;
+	var input = curInput;
 
-	// if the deal is unknown
-	if (unknownDeals.hasOwnProperty(input)) {
-		elInfo.html(getUnknown(input));
+	// if we have already searched for this deal
+	if (knownDeals.hasOwnProperty(input)) {
+		getKnown(input);
 		return;
 	}
-	// get rid of extra sequence terms
-	items = items.slice(0, defaultLength);
-	initial = items.join(',');
-	// if the sequence looks like it might have come from a known deal
-	if (knownDeals.hasOwnProperty(initial)) {
-		// identify the sequence and display information about it
-		identity = curSequence.identify();
-		if (knownDeals[initial].hasOwnProperty(identity)) {
-			elInfo.html(getKnown(initial, identity));
+	// search the OEIS instead
+	elInfo.html('Searching for this sequence&hellip;');
+	// remove unecessary trailing terms
+	items = encodeURIComponent(items.slice(0, defaultLength).join(', '));
+	// initiate the search
+	$.getJSON('oeis.php?q=' + items, function (results) {
+		var i, j, sequence, machine, identity;
+
+		// if the search results are no longer relevant
+		if (curInput != input) {
 			return;
 		}
-	}
-	// get rid of the first few zero terms before searching the OEIS
-	for (i = 0; i < 4 && items[i] == 0; i++) {}
-	query = encodeURIComponent(items.slice(i).join(','));
-	offset = i.toString();
-	// display a searching message
-	link = '<a href="' + 'http://oeis.org/search?q=signed%3A' +
-	query + '&fmt=short" title="Search for this sequence">the OEIS</a>';
-	elInfo.html('Searching ' + link + '&hellip;');
-	// initiate the search
-	$.getJSON(
-		'oeis.php?q=' + query + '&o=' + offset,
-		// this function will receive the search results
-		function(results) {
-			var i, sequence;
-
-			// if the search results are still relevant
-			if (curInput == input) {
-				// for each result
-				for (i = 0; i < results.length; i++) {
-					// turn the result's deal into a sequence
-					try {
-						sequence = new Sequence(results[i].deal);
-						sequence.build();
-					}
-					catch (e) {
-						continue;
-					}
-					// if the result's sequence looks like it matches ours
-					if (checkSequence(sequence, items)) {
-						// identify our sequence if necessary
-						if (typeof identity != 'string') {
-							identity = curSequence.identify();
-						}
-						// if the sequence identities match then we're done
-						if (sequence.identify() == identity) {
-							addKnown(initial, identity, results[i].oeis);
-							elInfo.html(getKnown(initial, identity));
-							return;
-						}
+		// for each result
+		for (i = 0; i < results.length; i++) {
+			// if the result has an identity
+			if (results[i].identity != null) {
+				// accept the result if its its identity is correct
+				if (results[i].identity == curSequence.identify()) {
+					knownDeals[input] = {
+						title: results[i].title,
+						info: results[i].info
+					};
+					getKnown(input);
+					return;
+				}
+			}
+			// if the result has a deal
+			else if (results[i].deal != null) {
+				// turn the deal into a sequence so that we can get its identity
+				sequence = new Sequence(results[i].deal);
+				sequence.build();
+				// accept the result if its identity is correct
+				if (sequence.identify() == curSequence.identify()) {
+					knownDeals[input] = {
+						title: results[i].title,
+						info: results[i].info
+					};
+					getKnown(input);
+					return;
+				}
+				// if the result's sequence is offset
+				if (results[i].offset > 0) {
+					// shift our sequence's machine by the offset
+					machine = buildProduct(
+						charMachine(results[i].offset),
+						curSequence.machine
+					);
+					// accept the result if its identity is correct up to offset
+					identity = identifyExpression(machine.expr);
+					if (sequence.identify() == identity) {
+						knownDeals[input] = {
+							title: null,
+							info: results[i].info_offset
+						};
+						getKnown(input);
+						return;
 					}
 				}
-				// none of the search results have our sequence's identity
-				unknownDeals[input] = link;
-				elInfo.html(getUnknown(input));
+			}
+			// if the result is the fallback (final) result
+			else {
+				knownDeals[input] = {
+					title: results[i].title,
+					info: results[i].info
+				};
+				getKnown(input);
 			}
 		}
-	);
+	});
 }
 
-function checkSequence(sequence, items) {
-	var i;
-
-	// check that the first defaultLength terms in the sequence match the items
-	for (i = 0; i < defaultLength; i++) {
-		if (sequence.next() != items[i]) {
-			return false;
-		}
+function getKnown(input) {
+	if (knownDeals[input].title != null) {
+		document.title = knownDeals[input].title + ' - ' + defaultTitle;
 	}
-	return true;
+	elInfo.html(knownDeals[input].info);
 }
