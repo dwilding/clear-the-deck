@@ -116,8 +116,13 @@ function identifySequence(items) {
 			// if the result has a deal
 			else if (results[i].deal != null) {
 				// turn the deal into a sequence so that we can get its identity
-				sequence = new Sequence(results[i].deal);
-				sequence.build();
+				try {
+					sequence = new Sequence(results[i].deal);
+					sequence.build();
+				}
+				catch (e) {
+					continue;
+				}
 				// accept the result if its identity is correct
 				if (sequence.identify() == curSequence.identify()) {
 					knownDeals[input] = {
