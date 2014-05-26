@@ -154,8 +154,9 @@ function identifySequence(items) {
 			// if the result is the fallback (final) result
 			else {
 				knownDeals[input] = {
-					title: results[i].title,
-					info: results[i].info
+					title: null,
+					info: results[i].info + ' Please <a href="submit/' +
+					encodeURIComponent(input) + '">tell me</a> if you find it.'
 				};
 				getKnown(input);
 			}
