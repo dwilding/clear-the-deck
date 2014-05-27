@@ -1,4 +1,4 @@
-[Clear the deck][1] is an integer sequence explorer developed by
+[Clear the Deck][1] is an integer sequence explorer developed by
 [Dave Wilding][2] and named by [Anthony Chiu][3].
 
 * [How it works][4]

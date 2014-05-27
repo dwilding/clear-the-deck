@@ -1,4 +1,4 @@
-var defaultTitle = 'Clear the deck',
+var defaultTitle = 'Clear the Deck',
 defaultLength = 12, // the minimum number of sequence terms we'll generate
 maxNumber = Math.pow(2, 53) - 1, // largest accurate number
 curInput = null,
