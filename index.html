@@ -5,7 +5,9 @@
 		<title>Clear the Deck</title>
 		<meta name="description" content="Discover integer sequences by dealing cards.">
 		<meta name="author" content="Dave Wilding">
+		<meta name="viewport" content="width=device-width; initial-scale=1;">
 		<link rel="stylesheet" href="default.css">
+		<link rel="stylesheet" media="screen and (min-width: 800px)" href="wide.css">
 		<!-- jQuery (http://jquery.com/) -->
 		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<!-- jQuery viewport plugin (http://www.appelsiini.net/projects/viewport) -->
@@ -14,27 +16,27 @@
 		<script src="sequences-min.js"></script>
 	</head>
 	<body>
-		<div id="container">
-			<h1>Clear the Deck</h1>
-			<p class="float-right big">
+		<div>
+			<h1 class="indent-left">Clear the Deck</h1>
+			<p class="indent-right">
 				<a class="image" href="https://github.com/dwilding/clear-the-deck" title="Source code on GitHub"><img alt="GitHub" src="github.png"></a>
 			</p>
 			<div class="clear"></div>
-			<p class="row col-left float-left">
+			<p class="tile indent-left indent-right maybe-left">
 				Given a deck of cards, your challenge is to find methods of
 				dealing the cards that produce interesting integer sequences.
-				Get started with <a href="#(1%20or%202)%5E%3F">an example</a>.
+				Get started with an <a href="#(1%20or%202)%5E%3F">example</a>.
 			</p>
-			<div class="row col-right float-left">
+			<div class="tile maybe-right">
 				<div class="box">
 					<h2>Your deal</h2>
 					<div id="deal-border" class="textbox unselected">
 						<input id="deal" type="text">
 					</div>
-					<p class="float-left small">
+					<p>
 						<a href="https://github.com/dwilding/clear-the-deck/wiki/The-format-of-a-deal">Help</a>
 					</p>
-					<p class="float-right small">
+					<p>
 						<a href="https://github.com/dwilding/clear-the-deck/wiki/How-it-works">Status</a>:
 						<span id="status"></span>
 					</p>
@@ -42,11 +44,9 @@
 				</div>
 			</div>
 			<div class="clear"></div>
-			<p id="info" class="row col-left float-left">
-			</p>
-			<div class="row col-right float-left">
-				<ol id="list" start="0">
-				</ol>
+			<p id="info" class="tile indent-left indent-right maybe-left"></p>
+			<div class="tile indent-left indent-right maybe-right">
+				<ol id="list" start="0"></ol>
 			</div>
 			<div id="bottom" class="clear"></div>
 		</div>

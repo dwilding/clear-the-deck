@@ -1,74 +1,53 @@
-body, html, h1, h2, p {
-	margin: 0;
-	padding: 0;
-}
-
 body, html {
 	background-color: #fff;
 	color: #000;
 	font: 1em sans-serif;
 	line-height: 1.5;
+	margin: 0;
+	padding: 0;
 	width: 100%;
 }
 
 body > div {
-	margin: 0 auto;
-	padding: 3em 0;
-	width: 80%;
+	padding: 2em 0;
 }
 
-.col-left {
-	width: 40%;
-}
-
-.col-right {
-	width: 60%;
-}
-
-.row {
-	margin: 3em 0 0 0;
-}
-
-.float-right {
-	display: inline;
-	float: right;
-}
-
-.clear {
-	clear: both;
+p {
+	margin: 0;
+	padding: 0;
 }
 
 h1 {
+	display: inline;
+	float: left;
+	font-size: 1.2em;
 	font-weight: bold;
+	margin: 0;
+	padding: 0;
 	text-transform: uppercase;
 }
 
-h1, .big, .sample {
+h1 + p {
+	display: inline;
+	float: right;
 	font-size: 1.2em;
 }
 
-h1, .float-left {
-	display: inline;
-	float: left;
-}
-
 h2 {
-	font-weight: bold;
-}
-
-h2, .small {
 	font-size: 0.85em;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
 }
 
 ol {
 	color: #e0e0e0;
-	margin: 0 0 0 4em;
+	margin: 0 0 0 3em;
 	padding: 0;
 }
 
 a {
 	color: #03c;
-	cursor: pointer;
 	text-decoration: underline;
 }
 
@@ -83,11 +62,27 @@ a.image > img {
 	display: block;
 }
 
+.tile {
+	margin-top: 2em;
+}
+
+.indent-left {
+	margin-left: 1em;
+}
+
+.indent-right {
+	margin-right: 1em;
+}
+
+.clear {
+	clear: both;
+}
+
 .box {
 	background-color: #f0f0f0;
-	border: 1px solid #d0d0d0;
+	border-top: 1px solid #d0d0d0;
+	border-bottom: 1px solid #d0d0d0;
 	color: #333;
-	margin: 0 0 0 3em;
 	padding: 1em;
 }
 
@@ -122,6 +117,18 @@ a.image > img {
 	outline: none;
 }
 
+.textbox + p {
+	display: inline;
+	float: left;
+	font-size: 0.85em;
+}
+
+.textbox + p + p {
+	display: inline;
+	float: right;
+	font-size: 0.85em;
+}
+
 .item {
 	color: #c00;
 }
@@ -133,6 +140,7 @@ a.image > img {
 .sample {
 	background-color: #f8f8f8;
 	border: 1px solid #d8d8d8;
+	font-size: 1.2em;
 	font-family: monospace;
 	padding: 0 0.4ex 0.2ex 0.4ex;
 }

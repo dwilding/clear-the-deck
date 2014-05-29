@@ -7,7 +7,7 @@ var knownDeals = {
 		be left with no cards. The number of different ways you can use this\
 		deal to empty a deck of <b>n</b> &ge; 0 cards is the <b>n</b>th\
 		<a href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci\
-		number</a>.<br><br><a href="#(0%20or%201)%5E6">Another example</a>'
+		number</a>. Show another <a href="#(0%20or%201)%5E6">example</a>.'
 	},
 	'(0 or 1)^6': {
 		title: null,
@@ -15,8 +15,8 @@ var knownDeals = {
 		or 1 card 6 times&quot;. The number of different ways you can use this\
 		deal to empty a deck of <b>n</b> &ge; 0 cards is the <a\
 		href="http://en.wikipedia.org/wiki/Binomial_coefficient">binomial\
-		coefficient</a> 6 choose <b>n</b>.<br><br><a href="#1...">Another\
-		example</a>'
+		coefficient</a> 6 choose <b>n</b>. Show another\
+		<a href="#1...">example</a>.'
 	},
 	'1...': {
 		title: null,
@@ -24,6 +24,6 @@ var knownDeals = {
 		deal as many cards as you like&quot;. If the deck contains 0 cards then\
 		it is not possible to carry out this deal, but otherwise there is\
 		exactly 1 way you can use this deal to empty a deck of <b>n</b> &ge; 1\
-		cards.<br><br><a href="#2%20*%20...1...">Another example</a>'
+		cards. Show another <a href="#2%20*%20...1...">example</a>.'
 	}
 };
