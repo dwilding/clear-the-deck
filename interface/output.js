@@ -156,7 +156,8 @@ function identifySequence(items) {
 				knownDeals[input] = {
 					title: null,
 					info: results[i].info + ' Please <a href="submit/' +
-					encodeURIComponent(input) + '">tell me</a> if you find it.'
+					encodeURIComponent(input) +
+					'">submit it</a> if you find it there.'
 				};
 				getKnown(input);
 			}

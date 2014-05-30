@@ -121,7 +121,7 @@
 
 	function info($title) {
 		$link = '<a href="http://oeis.org/' . $title . '">' . $title . '</a>';
-		return 'Congratulations! You have found sequence ' . $link . '.';
+		return 'Congratulations! You have found ' . $link . '.';
 	}
 
 	function info_offset($title, $offset) {
@@ -134,9 +134,9 @@
 		array_push($results, array(
 			'identity' => NULL,
 			'deal' => NULL,
-			'info' => 'This sequence may or may not exist in ' .
+			'info' => 'This sequence could be in the ' .
 			'<a href="http://oeis.org/search?q=signed%3A' . $q .
-			'&fmt=short" title="Search for this sequence">the OEIS</a>.',
+			'&fmt=short" title="Search for this sequence">OEIS</a>.',
 		));
 		exit(json_encode($results));
 	}
