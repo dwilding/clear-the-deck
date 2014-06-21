@@ -57,7 +57,8 @@
 		}
 
 		// find a rational generating function for the sequence
-		$regex = '#' . $title . '.*G\.f\.: ([+*()x\^\d\s]+)/([-+*()x\^\d\s]+)#';
+		$rational = '([+*()x\^\d\s]+)/([-+*()x\^\d\s]+)';
+		$regex = '#' . $title . '.*g\.f\.:\s*' . $rational . '#i';
 		$formula = array();
 		preg_match($regex, $reply, $formula);
 		if (empty($formula)) {
