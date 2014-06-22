@@ -51,9 +51,16 @@ a {
 	text-decoration: underline;
 }
 
+h1 > a {
+	color: #000;
+	text-decoration: none;
+}
+
 a.image {
 	color: #000;
-	display: block;
+	display: inline;
+	float: left;
+	margin: 0 0 0 1em;
 	text-decoration: none;
 }
 
