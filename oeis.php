@@ -87,7 +87,7 @@
 	usort($results, function ($result1, $result2) {
 		return $result1['offset'] - $result2['offset'];
 	});
-	output($results, $q);
+	output(array_values($results), $q);
 
 	/*
 	Convert a polynomial-based expression to a deal.
