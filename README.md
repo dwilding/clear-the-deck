@@ -7,7 +7,7 @@
 
 Logo made using [Vectorized Playing Cards][7] 1.3 (Copyright 2011 Chris Aguilar; licensed under [LGPL 3][8]).
 
-[1]: https://old.dpw.me/clear-the-deck/
+[1]: https://math.dpw.me/clear-the-deck/
 [2]: https://github.com/dwilding
 [3]: https://github.com/idno0001
 [4]: https://github.com/dwilding/clear-the-deck/wiki/How-it-works
